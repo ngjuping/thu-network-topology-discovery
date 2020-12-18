@@ -8,7 +8,7 @@ Under the view directory, run
 
 ## How to run map.py
 ```
-python3 map.py -i data/1.csv -o 1.json -g 1 --skip 500
+python3 map.py -i raw/1.csv -o result/1.json -g 1 --skip 500
 ```
 
 ## Target IP CIDRs

@@ -5,6 +5,7 @@ from networkx.readwrite import json_graph
 import csv 
 import json
 import sys
+import signal
 from optparse import OptionParser
 
 # Initialize the command line parser instance
@@ -15,7 +16,7 @@ parser.add_option("-o", "--output", dest="out_filename",
                   help="write to file the json for d3js visualization")
 parser.add_option("-g", "--group", dest="network_group",
                   help="group for the d3.js nodes")
-parser.add_option("--skip", metavar="N", dest="operate_every_n", help="Traceroute every N ips")
+parser.add_option("--skip", metavar="N", dest="operate_every_n", default=0, help="Traceroute every N ips")
 
 (options, args) = parser.parse_args()
 
@@ -32,6 +33,15 @@ ip_addrs = csv.reader(open(in_filename,'r'))
 counter_for_skip = 1
 
 G = nx.Graph()
+
+def generate_json():
+    os.remove('data.txt')
+
+    nx_graph_dict = json_graph.node_link_data(G)
+
+    with open(out_filename,"w") as json_save_to_file:
+        nx_graph_json = json.dump(nx_graph_dict,json_save_to_file)
+
 
 for raw_ip in ip_addrs:
     
@@ -53,7 +63,12 @@ for raw_ip in ip_addrs:
 
     command = "traceroute -I %s > data.txt" % (ip)
 
-    os.system(command)
+    status_code = os.system(command)
+
+    # Ctrl+C pressed
+    if status_code == 2:
+        generate_json()
+        sys.exit(0)
 
     print('done')
 
@@ -74,10 +89,5 @@ for raw_ip in ip_addrs:
 
             line = reader.readline()
 
-os.remove('data.txt')
-
-nx_graph_dict = json_graph.node_link_data(G)
-
-with open(out_filename,"w") as json_save_to_file:
-    nx_graph_json = json.dump(nx_graph_dict,json_save_to_file)
+generate_json()
 
