@@ -32,10 +32,13 @@ ip_addrs = csv.reader(open(in_filename,'r'))
 # Counter that is used for traceroute every n ips
 counter_for_skip = 1
 
+# Temporary file to store the traceroute result
+tmp_filename = 'csv%d_tmp.txt' % (network_group)
+
 G = nx.Graph()
 
 def generate_json():
-    os.remove('data.txt')
+    os.remove(tmp_filename)
 
     nx_graph_dict = json_graph.node_link_data(G)
 
@@ -45,8 +48,7 @@ def generate_json():
 
 for raw_ip in ip_addrs:
     
-
-    # Only perform traceroute every n, as specified in the cmd argument
+    # Only perform traceroute every n ips, as specified in the cmd argument
     if(counter_for_skip < operate_every_n):
         counter_for_skip += 1
         continue
@@ -61,7 +63,7 @@ for raw_ip in ip_addrs:
     # Prevent OS buffering, otherwise done is printed before os.system(command)
     sys.stdout.flush()
 
-    command = "traceroute -I %s > data.txt" % (ip)
+    command = "traceroute -I %s > %s" % (ip,tmp_filename)
 
     status_code = os.system(command)
 
@@ -72,7 +74,7 @@ for raw_ip in ip_addrs:
 
     print('done')
 
-    with open('data.txt', 'r') as reader:
+    with open(tmp_filename, 'r') as reader:
         reader.readline()  # Read off heading
         current_ip = ''
         previous_ip = None
