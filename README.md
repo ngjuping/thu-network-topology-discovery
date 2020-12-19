@@ -11,6 +11,12 @@ python serve.py
 python3 map.py --input raw/7.csv --output results/7.json --subnet 219.223.176.0/20 --skip 2
 ```
 
+## How to merge
+Goto results folder, then run
+```
+python3 merge.py -o final.json
+```
+
 ## Target IP CIDRs
 - 59.66.0.0/16 
 - 101.5.0.0/16 
