@@ -7,6 +7,7 @@ import json
 import sys
 import signal
 from optparse import OptionParser
+from netaddr import IPNetwork, IPAddress
 
 # Initialize the command line parser instance
 parser = OptionParser()
@@ -14,8 +15,8 @@ parser.add_option("-i", "--input", dest="in_filename",
                   help="read from file for ip to traceroute")
 parser.add_option("-o", "--output", dest="out_filename",
                   help="write to file the json for d3js visualization")
-parser.add_option("-g", "--group", dest="network_group",
-                  help="group for the d3.js nodes")
+parser.add_option("-s", "--subnet", dest="network_subnet",
+                  help="subnet for the d3.js nodes")
 parser.add_option("--skip", metavar="N", dest="operate_every_n", default=0, help="Traceroute every N ips")
 
 (options, args) = parser.parse_args()
@@ -23,8 +24,11 @@ parser.add_option("--skip", metavar="N", dest="operate_every_n", default=0, help
 # Get parsed command line argument
 in_filename = options.in_filename
 out_filename = options.out_filename
-network_group = int(options.network_group)
+network_subnet = options.network_subnet
 operate_every_n = int(options.operate_every_n)
+
+basename = os.path.basename(in_filename)
+ip_network = IPNetwork(network_subnet)
 
 # Read a series of ips to be traceroute'ed
 ip_addrs = csv.reader(open(in_filename,'r'))
@@ -33,7 +37,7 @@ ip_addrs = csv.reader(open(in_filename,'r'))
 counter_for_skip = 1
 
 # Temporary file to store the traceroute result
-tmp_filename = 'csv%d_tmp.txt' % (network_group)
+tmp_filename = 'csv%s_tmp.txt' % (os.path.splitext(basename)[0])
 
 G = nx.Graph()
 
@@ -42,7 +46,9 @@ def generate_json():
 
     nx_graph_dict = json_graph.node_link_data(G)
 
-    with open(out_filename,"w") as json_save_to_file:
+    os.makedirs(os.path.dirname(out_filename), exist_ok=True) 
+
+    with open(out_filename,"w+") as json_save_to_file:
         nx_graph_json = json.dump(nx_graph_dict,json_save_to_file)
 
 
@@ -82,14 +88,30 @@ for raw_ip in ip_addrs:
         while( line ):
             match = re.search(r"\(([\d.]+)\)", line)
             if match:
+
                 current_ip = match.group(1)
+                
                 if current_ip not in G:
-                    G.add_node(current_ip,group=network_group)
+                    group = 0
+                    if IPAddress(current_ip) in ip_network:
+                        group = network_subnet
+                    G.add_node(current_ip,group=group)
+
                 if previous_ip:
                     G.add_edge(previous_ip, current_ip)
+
                 previous_ip = current_ip
 
             line = reader.readline()
+
+if '10.200.200.200' in G and '10.0.2.2' in G:
+    nx.set_node_attributes(G, 
+        {
+            '10.200.200.200':{'group':'local'},
+            '10.0.2.2':{'group':'local'},
+        }
+    )
+
 
 generate_json()
 

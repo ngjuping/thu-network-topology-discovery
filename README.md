@@ -8,7 +8,7 @@ python serve.py
 
 ## How to run map.py
 ```
-python3 map.py -i raw/1.csv -o result/1.json -g 1 --skip 500
+python3 map.py --input raw/7.csv --output results/7.json --subnet 219.223.176.0/20 --skip 2
 ```
 
 ## Target IP CIDRs

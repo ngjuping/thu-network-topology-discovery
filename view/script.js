@@ -20,10 +20,10 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
       "chart",
       ["data", "d3", "width", "height", "color", "drag", "invalidation"],
       function (data, d3, width, height, color, drag, invalidation) {
-        console.log(data);
+
         const links = data.links.map((d) => Object.create(d));
         const nodes = data.nodes.map((d) => Object.create(d));
-        console.log(nodes);
+
         const simulation = d3
           .forceSimulation(nodes)
           .force(
@@ -32,7 +32,7 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
           )
           .force("charge", d3.forceManyBody())
           .force("center", d3.forceCenter(width / 2, height / 2));
-        console.log(nodes);
+
         const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
         const link = svg
           .append("g")
@@ -54,7 +54,14 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
           .attr("fill", color)
           .call(drag(simulation));
 
-        node.append("title").text((d) => d.id);
+        node.append("title")
+            .text((d) => d.id)
+            .style("text-anchor", "middle")
+            .style("fill", "#555")
+            .style("font-family", "Arial")
+            .style("font-size", 12);
+
+
         simulation.on("tick", () => {
           link
             .attr("x1", (d) => d.source.x)
