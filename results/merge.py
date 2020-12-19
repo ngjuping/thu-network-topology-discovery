@@ -50,6 +50,7 @@ for jsonfile in json_files:
                 addToFinal(node)
 
         finaldict["links"].extend(jsondict.get("links"))
+        finaldict["links"] = [dict(t) for t in {tuple(d.items()) for d in finaldict["links"]}]
             
         
 with open(out_filename,'w') as outfile:

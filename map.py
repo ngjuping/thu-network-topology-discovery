@@ -42,6 +42,14 @@ tmp_filename = 'csv%s_tmp.txt' % (os.path.splitext(basename)[0])
 G = nx.Graph()
 
 def generate_json():
+
+    if '10.200.200.200' in G and '10.0.2.2' in G:
+        nx.set_node_attributes(G, 
+            {
+                '10.200.200.200':{'group':'local'},
+                '10.0.2.2':{'group':'local'},
+            }
+        )
     os.remove(tmp_filename)
 
     nx_graph_dict = json_graph.node_link_data(G)
@@ -104,13 +112,7 @@ for raw_ip in ip_addrs:
 
             line = reader.readline()
 
-if '10.200.200.200' in G and '10.0.2.2' in G:
-    nx.set_node_attributes(G, 
-        {
-            '10.200.200.200':{'group':'local'},
-            '10.0.2.2':{'group':'local'},
-        }
-    )
+
 
 
 generate_json()

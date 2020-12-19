@@ -1,4 +1,36 @@
 // https://observablehq.com/@d3/force-directed-graph@149
+function getWeight(src,tgt){
+  let srcfirst2octet = src.slice(0,8);
+  let tgtfirst2octet = tgt.slice(0,8);
+  let main2octet = "118.229.";
+
+  if(srcfirst2octet == tgtfirst2octet && srcfirst2octet == main2octet){
+    return 1;
+  }
+  if((srcfirst2octet == "118" && tgtfirst2octet != "118") || (srcfirst2octet != "118" && tgtfirst2octet == "118")){
+    return 0.5;
+  }
+  else{
+    return 3;
+  }
+}
+
+function getStrength(src,tgt){
+  let srcfirst2octet = src.slice(0,8);
+  let tgtfirst2octet = tgt.slice(0,8);
+  let main2octet = "118.229.";
+  if(srcfirst2octet == tgtfirst2octet && srcfirst2octet == main2octet){
+    
+    return 0.8;
+  }
+  if((srcfirst2octet == main2octet && tgtfirst2octet !=main2octet) || (srcfirst2octet != main2octet && tgtfirst2octet == main2octet)){
+    return 5;
+  }
+  else{
+    return 3;
+  }
+}
+
 export default function define(runtime, observer) {
   const main = runtime.module();
   const fileAttachments = new Map([
@@ -29,8 +61,16 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
           .force(
             "link",
             d3.forceLink(links).id((d) => d.id)
+            .distance(function (d) {
+              //length scales with distance
+              return (getWeight(d.source.id, d.target.id))/500 | 30;
+            })
+            .strength(function (d) {
+              //length scales with distance
+              return (getStrength(d.source.id, d.target.id))/50;
+            })
           )
-          .force("charge", d3.forceManyBody())
+          .force("charge", d3.forceManyBody().strength(-3))
           .force("center", d3.forceCenter(width / 2, height / 2));
 
         const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
@@ -83,7 +123,7 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
       return FileAttachment("miserables.json").json();
     });
   main.variable(observer("height")).define("height", function () {
-    return 600;
+    return 1200;
   });
   main.variable(observer("color")).define("color", ["d3"], function (d3) {
     const scale = d3.scaleOrdinal(d3.schemeCategory10);
