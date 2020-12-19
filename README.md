@@ -1,7 +1,13 @@
 # NetworkTopoTHU
 
+## Setup
+```
+pip3 install -r requirements.txt
+sudo apt install traceroute
+```
+
 ## How to run visualization
-Under the view directory, run
+In view directory, run
 ```
 python serve.py
 ```
@@ -12,7 +18,7 @@ python3 map.py --input raw/7.csv --output results/7.json --subnet 219.223.176.0/
 ```
 
 ## How to merge
-Goto results folder, then run
+In output folder, run
 ```
 python3 merge.py -o final.json
 ```
