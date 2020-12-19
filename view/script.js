@@ -5,13 +5,13 @@ function getWeight(src,tgt){
   let main2octet = "118.229.";
 
   if(srcfirst2octet == tgtfirst2octet && srcfirst2octet == main2octet){
-    return 1;
+    return 2;
   }
   if((srcfirst2octet == "118" && tgtfirst2octet != "118") || (srcfirst2octet != "118" && tgtfirst2octet == "118")){
     return 0.5;
   }
   else{
-    return 3;
+    return 1;
   }
 }
 
@@ -21,7 +21,7 @@ function getStrength(src,tgt){
   let main2octet = "118.229.";
   if(srcfirst2octet == tgtfirst2octet && srcfirst2octet == main2octet){
     
-    return 0.8;
+    return 1;
   }
   if((srcfirst2octet == main2octet && tgtfirst2octet !=main2octet) || (srcfirst2octet != main2octet && tgtfirst2octet == main2octet)){
     return 5;
@@ -63,7 +63,7 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
             d3.forceLink(links).id((d) => d.id)
             .distance(function (d) {
               //length scales with distance
-              return (getWeight(d.source.id, d.target.id))/500 | 30;
+              return (getWeight(d.source.id, d.target.id))/50 | 20;
             })
             .strength(function (d) {
               //length scales with distance
