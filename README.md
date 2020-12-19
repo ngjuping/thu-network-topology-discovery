@@ -3,7 +3,7 @@
 ## How to run visualization
 Under the view directory, run
 ```
- python -m http.server 8080
+python serve.py
 ```
 
 ## How to run map.py
