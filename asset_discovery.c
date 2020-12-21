@@ -4,6 +4,13 @@ Group3-bottom left
 Group4-bottom right
 Group5-righttop
 
+Yellow Dots (shenzhen)
+219.223.190.2 (dns.sz.tsinghua.edu.cn)
+219.223.190.1
+219.223.190.14
+219.223.190.4
+219.223.190.5
+
 Group 1-1 (Mostly printers except 1)
 59.66.192.2
 59.66.160.4
@@ -20,13 +27,6 @@ Group 1-2 (some printers some servers)
 166.111.147.1
 166.111.152.229
 
-Yellow Dots (shenzhen)
-219.223.190.2 (dns.sz.tsinghua.edu.cn)
-219.223.190.1
-219.223.190.14
-219.223.190.4
-219.223.190.5
-
 Group 2-1 (Server cluster)
 101.6.109.31 (xmpp, opsmessaging)
 101.6.50.212
@@ -39,7 +39,8 @@ Group 2-2 (Web servers, printers, self hosted Gitlab)
 166.111.4.25
 166.111.90.156
 166.111.224.126
-166.111.69.46
+166.111.69.46 (self hosted gitlab)
+http://166.111.69.46/users/sign_in (self hosted gitlab)
 166.111.89.61
 166.111.5.228
 166.111.224.205
@@ -77,6 +78,7 @@ Group 5 (59.66.X.X up but no service, some web servers)
 59.66.121.173
 59.66.124.199
 166.111.12.147 (Printer page)
+http://166.111.12.147/web/guest/en/websys/webArch/mainFrame.cgi
 166.111.15.209
 166.111.158.12
 101.6.54.73
@@ -100,12 +102,14 @@ myhome passes this as well
 net GW
 118.229.8.6
 
-iperf
-118.229.2.66 - 118.229.9.6
-118.229.2.78 - 118.229.9.6
 
 Hypothesis proved (at nodes with 118.229.9.6 as GW!)
 https://101.6.4.226/login.html
 https://101.6.8.118/web/frame/login.html (server)
-http://166.111.69.46/users/sign_in (self hosted gitlab)
-http://166.111.12.147/web/guest/en/websys/webArch/mainFrame.cgi
+
+
+
+
+iperf
+118.229.2.66 - 118.229.9.6
+118.229.2.78 - 118.229.9.6
