@@ -34,18 +34,13 @@ function getStrength(src,tgt){
 export default function define(runtime, observer) {
   const main = runtime.module();
   const fileAttachments = new Map([
-    ["miserables.json", new URL("./data_for_d3js.json", import.meta.url)],
+    ["data.json", new URL("./data_for_d3js.json", import.meta.url)],
   ]);
   main.builtin(
     "FileAttachment",
     runtime.fileAttachments((name) => fileAttachments.get(name))
   );
-  main.variable(observer()).define(["md"], function (md) {
-    return md`
-# Force-Directed Graph
 
-This network of character co-occurence in _Les Misérables_ is positioned by simulated forces using [d3-force](https://github.com/d3/d3-force). See also a [disconnected graph](/@d3/disjoint-force-directed-graph), and compare to [WebCoLa](/@mbostock/hello-cola).`;
-  });
   main
     .variable(observer("chart"))
     .define(
@@ -74,6 +69,7 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
           .force("center", d3.forceCenter(width / 2, height / 2));
 
         const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+
         const link = svg
           .append("g")
           .attr("stroke", "#999")
@@ -120,7 +116,7 @@ This network of character co-occurence in _Les Misérables_ is positioned by sim
   main
     .variable(observer("data"))
     .define("data", ["FileAttachment"], function (FileAttachment) {
-      return FileAttachment("miserables.json").json();
+      return FileAttachment("data.json").json();
     });
   main.variable(observer("height")).define("height", function () {
     return 1200;
